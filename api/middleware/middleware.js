@@ -33,7 +33,7 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
 
-  const name = req.body;
+  const { name } = req.body;
 
   if(!name || !name.trim()){
     res.status(400).json({
@@ -41,7 +41,7 @@ function validateUser(req, res, next) {
     })
   }
   else{
-    req.name=name.trim()
+    req.name=name.trim();
     next()
   }
 }
