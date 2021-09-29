@@ -36,8 +36,8 @@ router.post('/',validateUser, (req, res, next) => {
 
 router.put('/:id',validateUserId,validateUser, (req, res, next) => {
   User.update(req.params.id, {name: req.name})
-  .then(() => {
-    res.json(User.getById(req.params.id))
+  .then(()=> {
+    return User.getById(req.params.id)
     })
   .then(user=>{
     res.json(user)
@@ -55,9 +55,12 @@ router.delete('/:id',validateUserId, async (req, res, next) => {
   }
 });
 
-router.get('/:id/posts',validateUserId, (req, res) => {
-  // RETURN THE ARRAY OF USER POSTS
-  // this needs a middleware to verify user id
+router.get('/:id/posts',validateUserId, (req, res, next) => {
+  User.getUserPosts(req.params.id)
+  .then((userPosts)=>{
+    res.json(userPosts)
+  })
+  .catch(next)
 });
 
 router.post('/:id/posts',validateUserId,validatePost, (req, res) => {
@@ -66,10 +69,8 @@ router.post('/:id/posts',validateUserId,validatePost, (req, res) => {
   // and another middleware to check that the request body is valid
 });
 
-router.use((err, req, res, next)=>{
-  res.status(err.status || 500).json({
-    customMessage: "Something tragic insides posts rotuer happened"
-  })
+router.use((err, req, res)=>{
+  res.status(err.status || 500)
 })
 // do not forget to export the router
 module.exports=router;
