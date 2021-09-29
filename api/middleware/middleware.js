@@ -25,7 +25,7 @@ async function validateUserId(req, res, next) {
     }
   }
   catch(err){
-    res.status(55).json({
+    res.status(500).json({
       message: "Having trouble accessing the database"
     })
   }
