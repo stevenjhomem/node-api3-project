@@ -1,3 +1,6 @@
+const User=require('../users/users-model')
+
+
 function logger(req, res, next) {
   // DO YOUR MAGIC
   const timeStamp = new Date().toLocaleString();
@@ -7,10 +10,24 @@ function logger(req, res, next) {
   next()
 }
 
-function validateUserId(req, res, next) {
-  // DO YOUR MAGIC
-  console.log('validateUserId middleware')
-  next()
+async function validateUserId(req, res, next) {
+  try{
+    const user = await User.getById(req.params.id)
+    if(!user){
+      res.status(404).json({
+        message: "No such user exists in the database"
+      })
+    }
+    else{
+      req.user = user//this saves another trip to the database by tacking on the user to the request object for the next middleware function
+      next()
+    }
+  }
+  catch(err){
+    res.status(55).json({
+      message: "Having trouble accessing the database"
+    })
+  }
 }
 
 function validateUser(req, res, next) {
