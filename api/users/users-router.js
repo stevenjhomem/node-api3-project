@@ -13,7 +13,7 @@ const Post = require('../posts/posts-model');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  // RETURN AN ARRAY WITH ALL THE USERS
+  
   User.get()
   .then(users=>{
     res.json(users)
